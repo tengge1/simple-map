@@ -36,6 +36,8 @@ class Map {
     }
 
     drawMap() {
+        this.ctx.fillStyle = '#000000';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.mapBox = new MapBox();
         let xy = this.getCenterPixelXY(this.center[0], this.center[1], parseInt(this.zoom));
         this.mapBox.min = new Coordinate(this.tileSystem.pixelXYToLongLat(

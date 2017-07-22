@@ -33,6 +33,7 @@ class Map {
         this.drawMap();
         this.handleEvent();
         this.isMouseDown = false;
+        this.mouse = this.getCenterScreenXY();
     }
 
     drawMap() {
@@ -61,10 +62,14 @@ class Map {
                 let promise = new Promise((resolve, reject) => {
                     this.cache.getTile(i, j, (tile) => {
                         let centerScreenXY = this.getCenterScreenXY();
-                        let centerTileXY = this.getCenterPixelXY();
-                        let tileXY = this.tileSystem.tileXYToPixelXY(tile.x, tile.y);
+                        let centerPixelXY = this.getCenterPixelXY();
+                        let mouseScreenXY = this.getMouseScreenXY();
+                        let mousePixelXY = this.getMousePixelXY();
+                        let tilePixelXY = this.tileSystem.tileXYToPixelXY(tile.x, tile.y);
                         let scale = 1 + this.zoom - parseInt(this.zoom);
-                        this.ctx.drawImage(tile.img, (centerScreenXY[0] + tileXY[0] - centerTileXY[0]) * scale, (centerScreenXY[1] + tileXY[1] - centerTileXY[1]) * scale, 256 * scale, 256 * scale);
+                        let x = centerScreenXY[0] + tilePixelXY[0] - centerPixelXY[0] + (tilePixelXY[0] - mousePixelXY[0]) * (scale - 1);
+                        let y = centerScreenXY[1] + tilePixelXY[1] - centerPixelXY[1] + (tilePixelXY[1] - mousePixelXY[1]) * (scale - 1);
+                        this.ctx.drawImage(tile.img, x, y, 256 * scale, 256 * scale);
                         resolve();
                     });
                 });
@@ -88,8 +93,7 @@ class Map {
             this.mouseDownY = 0;
         }
         this.container.onmousemove = (e) => {
-            this.mouseX = e.x;
-            this.mouseY = e.y;
+            this.mouse = [e.x, e.y];
             if (this.isMouseDown) {
                 let centerPixelXY = this.getCenterPixelXY();
                 centerPixelXY[0] -= e.x - this.mouseDownX;
@@ -124,6 +128,25 @@ class Map {
     getCenterPixelXY() {
         let xy = this.tileSystem.longLatToPixelXY(this.center[0], this.center[1], this.zoom);
         return xy;
+    }
+
+    getMouse() {
+        let mousePixelXY = this.getMousePixelXY();
+        return this.tileSystem.pixelXYToLongLat(mousePixelXY[0], mousePixelXY[1], parseInt(this.zoom));
+    }
+
+    getMouseScreenXY() {
+        return this.mouse;
+    }
+
+    getMousePixelXY() {
+        let centerScreenXY = this.getCenterScreenXY();
+        let centerPixelXY = this.getCenterPixelXY();
+
+        let mouseXY = this.getMouseScreenXY();
+        let mousePixelX = centerPixelXY[0] + mouseXY[0] - centerScreenXY[0];
+        let mousePixelY = centerPixelXY[1] + mouseXY[1] - centerScreenXY[1];
+        return [mousePixelX, mousePixelY];
     }
 
     setCenter(center) {

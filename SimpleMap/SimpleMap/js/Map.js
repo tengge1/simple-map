@@ -27,28 +27,30 @@ class Map {
         this.canvas.width = this.canvas.clientWidth;
         this.canvas.height = this.canvas.clientHeight;
         this.ctx = this.canvas.getContext('2d');
+        this.ctx.fillStyle = '#000000';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.cache = new Cache(this);
 
-        this.drawMap();
-        this.handleEvent();
         this.isMouseDown = false;
         this.mouse = this.getCenterScreenXY();
+        this.drawMap();
+        this.handleEvent();
     }
 
     drawMap() {
-        this.ctx.fillStyle = '#000000';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.mapBox = new MapBox();
-        let xy = this.getCenterPixelXY(this.center[0], this.center[1], parseInt(this.zoom));
+        let mousePixelXY = this.getMousePixelXY();
+        let mouseScreenXY = this.getMouseScreenXY();
+
         this.mapBox.min = new Coordinate(this.tileSystem.pixelXYToLongLat(
-            xy[0] - this.width / 2,
-            xy[1] - this.height / 2,
+            mousePixelXY[0] - mouseScreenXY[0],
+            mousePixelXY[1] - mouseScreenXY[1],
             parseInt(this.zoom)
             ));
         this.mapBox.max = new Coordinate(this.tileSystem.pixelXYToLongLat(
-            xy[0] + this.width / 2,
-            xy[1] + this.height / 2,
+            mousePixelXY[0] + this.width - mouseScreenXY[0],
+            mousePixelXY[1] + this.width - mouseScreenXY[1],
             parseInt(this.zoom)
             ));
         let xy_min = this.tileSystem.longLatToPixelXY(this.mapBox.min.lon, this.mapBox.min.lat, parseInt(this.zoom));
@@ -61,6 +63,9 @@ class Map {
             for (let j = Math.floor(tile_min[1]) ; j < Math.ceil(tile_max[1]) ; j++) {
                 let promise = new Promise((resolve, reject) => {
                     this.cache.getTile(i, j, (tile) => {
+                        if (parseInt(tile.zoom) != parseInt(this.zoom)) {
+                            return;
+                        }
                         let centerScreenXY = this.getCenterScreenXY();
                         let centerPixelXY = this.getCenterPixelXY();
                         let mouseScreenXY = this.getMouseScreenXY();

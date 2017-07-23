@@ -6,10 +6,12 @@ class Tile {
     constructor(tile) {
         tile = tile || {
             x: 0,
-            y: 0
+            y: 0,
+            zoom: 0
         };
         this.x = tile.x;
         this.y = tile.y;
+        this.zoom = tile.zoom;
         this.img = null;
     }
 

@@ -20,7 +20,7 @@ class Cache {
         } else {
             let key = this.map.tileSystem.tileXYToQuadKey(x, y, this.map.zoom);
             let url = `http://t0.ssl.ak.tiles.virtualearth.net/tiles/a${key}.jpeg?g=5793`;
-            tile = new Tile({ x: x, y: y });
+            tile = new Tile({ x: x, y: y, zoom: this.map.zoom });
             tile.load(url, (img) => {
                 tile.img = img;
                 this.tiles.push(tile);

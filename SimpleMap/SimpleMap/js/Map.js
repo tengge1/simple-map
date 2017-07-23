@@ -18,7 +18,9 @@ class Map {
         this.config = config;
         this.center = this.config.center;
         this.zoom = this.config.zoom;
+
         this.tileSystem = this.config.tileSystem;
+        this.eventSystem = new EventSystem(this);
 
         this.canvas = document.createElement('canvas');
         this.canvas.style.width = '100%';
@@ -27,18 +29,17 @@ class Map {
         this.canvas.width = this.canvas.clientWidth;
         this.canvas.height = this.canvas.clientHeight;
         this.ctx = this.canvas.getContext('2d');
-        this.ctx.fillStyle = '#000000';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.cache = new Cache(this);
 
         this.isMouseDown = false;
         this.mouse = this.getCenterScreenXY();
         this.drawMap();
-        this.handleEvent();
     }
 
     drawMap() {
+        this.ctx.fillStyle = '#000000';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.mapBox = new MapBox();
         let mousePixelXY = this.getMousePixelXY();
         let mouseScreenXY = this.getMouseScreenXY();
@@ -84,42 +85,6 @@ class Map {
         Promise.all(promises).then((e) => {
 
         });
-    }
-
-    handleEvent() {
-        this.container.onmousedown = (e) => {
-            this.isMouseDown = true;
-            this.mouseDownX = e.x;
-            this.mouseDownY = e.y;
-        }
-        this.container.onmouseup = (e) => {
-            this.isMouseDown = false;
-            this.mouseDownX = 0;
-            this.mouseDownY = 0;
-        }
-        this.container.onmousemove = (e) => {
-            this.mouse = [e.x, e.y];
-            if (this.isMouseDown) {
-                let centerPixelXY = this.getCenterPixelXY();
-                centerPixelXY[0] -= e.x - this.mouseDownX;
-                centerPixelXY[1] -= e.y - this.mouseDownY;
-                let center = this.tileSystem.pixelXYToLongLat(centerPixelXY[0], centerPixelXY[1], this.zoom);
-                this.setCenter(center);
-                this.mouseDownX = e.x;
-                this.mouseDownY = e.y;
-            }
-        }
-        this.container.onmousewheel = (e) => {
-            var delta = e.wheelDelta;
-            this.zoom += delta * 0.002;
-            if (this.zoom < 8) {
-                this.zoom = 8;
-            }
-            if (this.zoom > 20) {
-                this.zoom = 20;
-            }
-            this.drawMap();
-        }
     }
 
     getCenter() {

@@ -66,6 +66,11 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="js\Event\BaseEvent.js" />
+    <Content Include="js\Event\EventSystem.js" />
+    <Content Include="js\Event\MouseDownEvent.js" />
+    <Content Include="js\Event\MouseMoveEvent.js" />
+    <Content Include="js\Event\MouseUpEvent.js" />
     <Content Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

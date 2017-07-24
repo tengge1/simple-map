@@ -6,8 +6,9 @@ class BaseEvent {
         this.map = map;
     }
 
-    handle(e) {
-
+    handle(eventSystem) {
+        // register mouse event or keyboard event here.
+        // eg: eventSystem.register('mousedown', this.onMouseDown);
     }
 
 }

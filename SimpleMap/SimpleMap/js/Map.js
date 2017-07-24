@@ -2,7 +2,7 @@
 class Map {
 
     constructor(container_id, config) {
-        if (container == null) {
+        if (container == undefined) {
             throw Error('Map: container_id is undefined.');
         }
         if (config == null) {
@@ -19,9 +19,7 @@ class Map {
         this.center = this.config.center;
         this.zoom = this.config.zoom;
 
-        this.tileSystem = this.config.tileSystem;
-        this.eventSystem = new EventSystem(this);
-
+        // canvas
         this.canvas = document.createElement('canvas');
         this.canvas.style.width = '100%';
         this.canvas.style.height = '100%';
@@ -30,61 +28,17 @@ class Map {
         this.canvas.height = this.canvas.clientHeight;
         this.ctx = this.canvas.getContext('2d');
 
+        // system
         this.cache = new Cache(this);
+        this.tileSystem = this.config.tileSystem;
+        this.eventSystem = new EventSystem(this);
+        this.renderSystem = new RenderSystem(this);
 
         this.isMouseDown = false;
         this.mouse = this.getCenterScreenXY();
-        this.drawMap();
-    }
 
-    drawMap() {
-        this.ctx.fillStyle = '#000000';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        this.mapBox = new MapBox();
-        let mousePixelXY = this.getMousePixelXY();
-        let mouseScreenXY = this.getMouseScreenXY();
-
-        this.mapBox.min = new Coordinate(this.tileSystem.pixelXYToLongLat(
-            mousePixelXY[0] - mouseScreenXY[0],
-            mousePixelXY[1] - mouseScreenXY[1],
-            parseInt(this.zoom)
-            ));
-        this.mapBox.max = new Coordinate(this.tileSystem.pixelXYToLongLat(
-            mousePixelXY[0] + this.width - mouseScreenXY[0],
-            mousePixelXY[1] + this.width - mouseScreenXY[1],
-            parseInt(this.zoom)
-            ));
-        let xy_min = this.tileSystem.longLatToPixelXY(this.mapBox.min.lon, this.mapBox.min.lat, parseInt(this.zoom));
-        let tile_min = this.tileSystem.pixelXYToTileXY(xy_min[0], xy_min[1]);
-        let xy_max = this.tileSystem.longLatToPixelXY(this.mapBox.max.lon, this.mapBox.max.lat, parseInt(this.zoom));
-        let tile_max = this.tileSystem.pixelXYToTileXY(xy_max[0], xy_max[1]);
-
-        let promises = [];
-        for (let i = Math.floor(tile_min[0]) ; i <= Math.ceil(tile_max[0]) ; i++) {
-            for (let j = Math.floor(tile_min[1]) ; j < Math.ceil(tile_max[1]) ; j++) {
-                let promise = new Promise((resolve, reject) => {
-                    this.cache.getTile(i, j, (tile) => {
-                        if (parseInt(tile.zoom) != parseInt(this.zoom)) {
-                            return;
-                        }
-                        let centerScreenXY = this.getCenterScreenXY();
-                        let centerPixelXY = this.getCenterPixelXY();
-                        let mouseScreenXY = this.getMouseScreenXY();
-                        let mousePixelXY = this.getMousePixelXY();
-                        let tilePixelXY = this.tileSystem.tileXYToPixelXY(tile.x, tile.y);
-                        let scale = 1 + this.zoom - parseInt(this.zoom);
-                        let x = centerScreenXY[0] + tilePixelXY[0] - centerPixelXY[0] + (tilePixelXY[0] - mousePixelXY[0]) * (scale - 1);
-                        let y = centerScreenXY[1] + tilePixelXY[1] - centerPixelXY[1] + (tilePixelXY[1] - mousePixelXY[1]) * (scale - 1);
-                        this.ctx.drawImage(tile.img, x, y, 256 * scale, 256 * scale);
-                        resolve();
-                    });
-                });
-                promises.push(promise);
-            }
-        }
-        Promise.all(promises).then((e) => {
-
-        });
+        // start render
+        this.renderSystem.render();
     }
 
     getCenter() {
@@ -121,7 +75,7 @@ class Map {
 
     setCenter(center) {
         this.center = center;
-        this.drawMap();
+        this.renderSystem.render();
     }
 
     getZoom() {

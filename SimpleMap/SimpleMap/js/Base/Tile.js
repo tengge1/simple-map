@@ -20,7 +20,8 @@ class Tile {
         img.width = 256;
         img.height = 256;
         img.src = url;
-        img.onload = function (e) {
+        img.onload = (e) => {
+            this.img = img;
             if (typeof (callback) == 'function') {
                 callback(e.target);
             }

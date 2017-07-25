@@ -38,7 +38,7 @@ class Map {
         this.mouse = this.getCenterScreenXY();
 
         // start render
-        this.renderSystem.render();
+        this.render();
     }
 
     getCenter() {
@@ -75,7 +75,7 @@ class Map {
 
     setCenter(center) {
         this.center = center;
-        this.renderSystem.render();
+        this.render();
     }
 
     getZoom() {
@@ -84,5 +84,9 @@ class Map {
 
     setZoom(zoom) {
         this.zoom = zoom;
+    }
+
+    render() {
+        this.renderSystem.render();
     }
 }

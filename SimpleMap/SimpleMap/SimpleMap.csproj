@@ -69,6 +69,7 @@
     <Content Include="js\Event\BaseEvent.js" />
     <Content Include="js\Event\DragEvent.js" />
     <Content Include="js\Event\EventSystem.js" />
+    <Content Include="js\Event\ZoomEvent.js" />
     <Content Include="js\Render\BaseRenderer.js" />
     <Content Include="js\Render\RenderSystem.js" />
     <Content Include="js\Render\TileRenderer.js" />

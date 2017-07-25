@@ -9,6 +9,8 @@ class EventSystem {
         // add your custom event here
         let dragEvent = new DragEvent(this.map);
         dragEvent.handle(this);
+        let zoomEvent = new ZoomEvent(this.map);
+        zoomEvent.handle(this);
     }
 
     register(eventName, handler) {

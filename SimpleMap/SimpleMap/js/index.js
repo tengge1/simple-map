@@ -9,11 +9,11 @@ var start = function () {
     var map = new Map('container', mapConfig);
     map.on('mousemove', (e) => {
         var lonlats = map.getMouse();
-        document.getElementById('location').innerHTML = `位置：${lonlats[0].toFixed(4)}，${lonlats[1].toFixed(4)}`;
+        document.getElementById('location').innerHTML = `位置: ${lonlats[0].toFixed(5)}，${lonlats[1].toFixed(5)}`;
     });
     map.on('mousewheel', (e) => {
         var zoom = map.getZoom();
-        document.getElementById('zoom').innerHTML = `层级：${zoom.toFixed(1)}`;
+        document.getElementById('zoom').innerHTML = `层级: ${zoom.toFixed(1)}`;
     });
 }
 

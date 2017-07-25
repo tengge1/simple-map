@@ -24,7 +24,7 @@ class DragEvent extends BaseEvent {
     }
 
     onMouseMove(e) {
-        this.mouse = [e.x, e.y];
+        this.map.mouse = [e.x, e.y];
         if (this.isMouseDown) {
             let centerPixelXY = this.map.getCenterPixelXY();
             centerPixelXY[0] -= e.x - this.mouseDownX;

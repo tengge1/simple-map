@@ -89,4 +89,8 @@ class Map {
     render() {
         this.renderSystem.render();
     }
+
+    on(eventName, func) {
+        this.eventSystem.register(eventName, func);
+    }
 }

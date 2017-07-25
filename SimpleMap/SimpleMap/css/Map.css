@@ -17,6 +17,7 @@
     bottom: 10px;
     width: 260px;
     color: white;
+    pointer-events: none;
 }
 
 #zoom {
@@ -25,4 +26,5 @@
     bottom: 10px;
     width: 220px;
     color:white;
+    pointer-events: none;
 }

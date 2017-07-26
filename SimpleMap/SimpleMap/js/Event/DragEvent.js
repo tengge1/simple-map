@@ -29,7 +29,7 @@ class DragEvent extends BaseEvent {
             let centerPixelXY = this.map.getCenterPixelXY();
             centerPixelXY[0] -= e.x - this.mouseDownX;
             centerPixelXY[1] -= e.y - this.mouseDownY;
-            let center = this.map.tileSystem.pixelXYToLongLat(centerPixelXY[0], centerPixelXY[1], this.map.zoom);
+            let center = this.map.tileSystem.pixelXYToLongLat(centerPixelXY[0], centerPixelXY[1], parseInt(this.map.zoom));
             this.map.setCenter(center);
             this.mouseDownX = e.x;
             this.mouseDownY = e.y;

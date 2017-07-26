@@ -11,6 +11,7 @@ class ZoomEvent extends BaseEvent {
 
     onMouseWheel(e) {
         var delta = e.wheelDelta;
+        let oldZoom = this.map.zoom;
         this.map.zoom += delta * 0.001;
         if (this.map.zoom < 6) {
             this.map.zoom = 6;

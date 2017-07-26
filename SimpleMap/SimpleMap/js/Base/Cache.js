@@ -4,7 +4,7 @@
 class Cache {
 
     constructor(map) {
-        if (map == null) {
+        if (map == undefined) {
             throw Error('Cache: map is not defined.');
         }
         this.map = map;

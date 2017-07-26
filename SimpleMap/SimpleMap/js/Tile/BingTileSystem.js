@@ -185,4 +185,17 @@ class BingTileSystem {
         }
         return [tileX, tileY, levelOfDetail];
     }
+
+    /// <summary>
+    /// Converts tile XY coordinates to url.
+    /// </summary>
+    /// <param name="tileX">Tile X coordinate.</param>
+    /// <param name="tileY">Tile Y coordinate.</param>
+    /// <param name="levelOfDetail">Level of detail, from 1 (lowest detail)
+    /// to 23 (highest detail).</param>
+    /// <returns>url of the tile</returns>
+    tileXYToUrl(tileX, tileY, levelOfDetail) {
+        let key = this.tileXYToQuadKey(tileX, tileY, parseInt(levelOfDetail));
+        return `http://t0.ssl.ak.tiles.virtualearth.net/tiles/a${key}.jpeg?g=5793`;
+    }
 }

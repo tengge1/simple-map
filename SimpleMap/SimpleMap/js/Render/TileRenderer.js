@@ -3,22 +3,21 @@
 class TileRenderer extends BaseRenderer {
 
     render(map) {
-        this.canvas = this.map.canvas;
         this.ctx = this.map.ctx;
         this.ctx.fillStyle = '#000000';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillRect(0, 0, this.map.canvas.width, this.map.canvas.height);
         this.mapBox = new MapBox();
-        let mousePixelXY = this.map.getMousePixelXY();
-        let mouseScreenXY = this.map.getMouseScreenXY();
+        let centerPixelXY = this.map.getCenterPixelXY();
+        let centerScreenXY = this.map.getCenterScreenXY();
 
         this.mapBox.min = new Coordinate(this.map.tileSystem.pixelXYToLongLat(
-            mousePixelXY[0] - mouseScreenXY[0],
-            mousePixelXY[1] - mouseScreenXY[1],
+            centerPixelXY[0] - centerScreenXY[0],
+            centerPixelXY[1] - centerScreenXY[1],
             parseInt(this.map.zoom)
             ));
         this.mapBox.max = new Coordinate(this.map.tileSystem.pixelXYToLongLat(
-            mousePixelXY[0] + this.canvas.width - mouseScreenXY[0],
-            mousePixelXY[1] + this.canvas.width - mouseScreenXY[1],
+            centerPixelXY[0] + this.map.canvas.width - centerScreenXY[0],
+            centerPixelXY[1] + this.map.canvas.height - centerScreenXY[1],
             parseInt(this.map.zoom)
             ));
         let xy_min = this.map.tileSystem.longLatToPixelXY(this.mapBox.min.lon, this.mapBox.min.lat, parseInt(this.map.zoom));
@@ -33,12 +32,10 @@ class TileRenderer extends BaseRenderer {
                     this.map.cache.getTile(i, j, (tile) => {
                         let centerScreenXY = this.map.getCenterScreenXY();
                         let centerPixelXY = this.map.getCenterPixelXY();
-                        let mouseScreenXY = this.map.getMouseScreenXY();
-                        let mousePixelXY = this.map.getMousePixelXY();
                         let tilePixelXY = this.map.tileSystem.tileXYToPixelXY(tile.x, tile.y);
                         let scale = 1 + this.map.zoom - parseInt(this.map.zoom);
-                        let x = centerScreenXY[0] + tilePixelXY[0] - centerPixelXY[0] + (tilePixelXY[0] - mousePixelXY[0]) * (scale - 1);
-                        let y = centerScreenXY[1] + tilePixelXY[1] - centerPixelXY[1] + (tilePixelXY[1] - mousePixelXY[1]) * (scale - 1);
+                        let x = (centerScreenXY[0] + tilePixelXY[0] - centerPixelXY[0]) * scale;
+                        let y = (centerScreenXY[1] + tilePixelXY[1] - centerPixelXY[1]) * scale;
                         this.ctx.drawImage(tile.img, x, y, 256 * scale, 256 * scale);
                         resolve();
                     });
